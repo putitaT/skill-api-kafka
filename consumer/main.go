@@ -13,7 +13,7 @@ import (
 	"syscall"
 
 	"github.com/IBM/sarama"
-	"github.com/putitaT/skill-api-kafka/consumer/register"
+	register "github.com/putitaT/skill-api-kafka/consumer/skill"
 )
 
 // Sarama configuration options

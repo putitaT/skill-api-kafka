@@ -1,4 +1,4 @@
-package register
+package skill
 
 import (
 	"fmt"
@@ -34,13 +34,10 @@ consume:
 				break consume
 			}
 
-			if err := Handle(msg.Value); err != nil {
-
-			}
-
 			fmt.Printf("Message topic:%q partition:%d offset:%d message:%s\n", msg.Topic, msg.Partition, msg.Offset, msg.Value)
 
-			sess.MarkMessage(msg, "")
+			HandleMessage(msg, sess)
+
 			// sess.Commit()
 		// Should return when `session.Context()` is done.
 		// If not, will raise `ErrRebalanceInProgress` or `read tcp <ip>:<port>: i/o timeout` when kafka rebalance. see:
@@ -58,8 +55,4 @@ func (c *Consumer) NewReady() {
 
 func (c *Consumer) Ready() <-chan struct{} {
 	return c.ready
-}
-
-func Handle(b []byte) error {
-	return nil
 }

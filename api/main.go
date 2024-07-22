@@ -12,7 +12,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/putitaT/skill-api-kafka/api/database"
 	"github.com/putitaT/skill-api-kafka/api/skill"
+	_ "github.com/putitaT/skill-api-kafka/api/skill"
 )
 
 func main() {
@@ -22,7 +24,8 @@ func main() {
 	r := gin.Default()
 
 	// database.CreateTable()
-	skill.Producer()
+	// skill.Producer()
+	skill.SkillApi(r)
 
 	srv := http.Server{
 		Addr:    ":" + os.Getenv("PORT"),
