@@ -12,10 +12,17 @@ import (
 
 var db = database.ConnectDB()
 
-func getSkillByKey(ctx *gin.Context) {
+type skillHandler struct {
+	repository skillRepository
+}
+
+func NewHandler(repository skillRepository) skillHandler {
+	return skillHandler{repository: repository}
+}
+
+func (handler *skillHandler) GetSkillByKeyHandler(ctx *gin.Context) {
 	key := ctx.Param("key")
-	sql := "SELECT key, name, description, logo, tags FROM skill where key=$1"
-	row := db.QueryRow(sql, key)
+	row := handler.repository.getSkillByKey(key)
 
 	var skill util.SkillDB
 	var res map[string]any
@@ -35,8 +42,8 @@ func getSkillByKey(ctx *gin.Context) {
 	}
 }
 
-func getAllSkill(ctx *gin.Context) {
-	rows, err := db.Query("SELECT key, name, description, logo, tags FROM skill ORDER BY key")
+func (handler *skillHandler) GetAllSkillHandler(ctx *gin.Context) {
+	rows, err := handler.repository.getAllSkill()
 	var res map[string]any
 	if err != nil {
 		res = map[string]any{

@@ -2,9 +2,9 @@ package skill
 
 import "github.com/gin-gonic/gin"
 
-func Router(r *gin.Engine) {
-	r.GET("/api/v1/skills/:key", getSkillByKey)
-	r.GET("/api/v1/skills", getAllSkill)
+func Router(r *gin.Engine, skillHandler skillHandler) {
+	r.GET("/api/v1/skills/:key", skillHandler.GetSkillByKeyHandler)
+	r.GET("/api/v1/skills", skillHandler.GetAllSkillHandler)
 	r.POST("/api/v1/skills", createSkill)
 	r.PUT("/api/v1/skills/:key", updateSkillById)
 	r.PATCH("/api/v1/skills/:key/actions/name", updateNameById)

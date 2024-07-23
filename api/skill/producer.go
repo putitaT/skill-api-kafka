@@ -26,11 +26,7 @@ func init() {
 }
 
 func Producer(message []byte, key string) error {
-	config := sarama.NewConfig()
-	config.Producer.Return.Successes = true
-	config.Producer.Return.Errors = true
-	config.Producer.Partitioner = sarama.NewRoundRobinPartitioner
-	config.Producer.RequiredAcks = sarama.WaitForAll
+	config := configProducer()
 
 	var err error
 	producer, err = sarama.NewSyncProducer(strings.Split(brokers, ","), config)
@@ -52,4 +48,14 @@ func Producer(message []byte, key string) error {
 		log.Printf("> message sent to partition %d at offset %d\n", partition, offset)
 		return nil
 	}
+}
+
+func configProducer() *sarama.Config {
+	config := sarama.NewConfig()
+	config.Producer.Return.Successes = true
+	config.Producer.Return.Errors = true
+	config.Producer.Partitioner = sarama.NewRoundRobinPartitioner
+	config.Producer.RequiredAcks = sarama.WaitForAll
+
+	return config
 }
