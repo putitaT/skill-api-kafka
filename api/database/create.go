@@ -1,12 +1,12 @@
 package database
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 )
 
-func CreateTable() {
-	db := ConnectDB()
+func CreateTable(db *sql.DB) {
 	createTb := `
 	CREATE TABLE skill (
 		key TEXT PRIMARY KEY,

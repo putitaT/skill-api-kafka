@@ -17,6 +17,11 @@ import (
 	"github.com/putitaT/skill-api-kafka/api/skill"
 )
 
+func init() {
+	db := database.ConnectDB()
+	database.CreateTable(db)
+}
+
 func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
 	defer cancel()
