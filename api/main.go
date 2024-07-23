@@ -6,7 +6,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
+
+	// "os"
 	"os/signal"
 	"syscall"
 	"time"
@@ -25,10 +26,10 @@ func main() {
 
 	// database.CreateTable()
 	// skill.Producer()
-	skill.SkillApi(r)
+	skill.Router(r)
 
 	srv := http.Server{
-		Addr:    ":" + os.Getenv("PORT"),
+		Addr:    ":" + "8090",
 		Handler: r,
 	}
 

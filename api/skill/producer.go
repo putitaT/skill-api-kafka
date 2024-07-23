@@ -3,6 +3,7 @@ package skill
 import (
 	"log"
 	"os"
+	"strings"
 
 	_ "net/http/pprof"
 
@@ -15,6 +16,7 @@ import (
 var (
 	topic    = os.Getenv("TOPIC")
 	producer sarama.SyncProducer
+	brokers  = os.Getenv("BROKERS")
 )
 
 func init() {
@@ -31,7 +33,7 @@ func Producer(message []byte, key string) error {
 	config.Producer.RequiredAcks = sarama.WaitForAll
 
 	var err error
-	producer, err = sarama.NewSyncProducer([]string{"localhost:9092", "localhost:9093", "localhost:9094"}, config)
+	producer, err = sarama.NewSyncProducer(strings.Split(brokers, ","), config)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -41,8 +43,7 @@ func Producer(message []byte, key string) error {
 		}
 	}()
 
-	// for range 10 {
-	msg := &sarama.ProducerMessage{Topic: "my-topic", Value: sarama.ByteEncoder(message), Key: sarama.StringEncoder(key)}
+	msg := &sarama.ProducerMessage{Topic: topic, Value: sarama.ByteEncoder(message), Key: sarama.StringEncoder(key)}
 	partition, offset, error := producer.SendMessage(msg)
 	if error != nil {
 		log.Printf("FAILED to send message: %s\n", error)
@@ -51,28 +52,4 @@ func Producer(message []byte, key string) error {
 		log.Printf("> message sent to partition %d at offset %d\n", partition, offset)
 		return nil
 	}
-	// }
-
-	// return nil
-	// for range 10 {
-	// msg := &sarama.ProducerMessage{Topic: "my-topic", Value: sarama.StringEncoder("testing 123")}
-	// partition, offset, err := producer.SendMessage(msg)
-	// if err != nil {
-	// 	log.Printf("FAILED to send message: %s\n", err)
-	// } else {
-	// 	log.Printf("> message sent to partition %d at offset %d\n", partition, offset)
-	// }
-	// }
 }
-
-// func SendMessage(message []byte, key string) error {
-// 	msg := &sarama.ProducerMessage{Topic: "my-topic", Value: sarama.ByteEncoder(message), Key: sarama.StringEncoder(key)}
-// 	partition, offset, err := producer.SendMessage(msg)
-// 	if err != nil {
-// 		log.Printf("FAILED to send message: %s\n", err)
-// 		return err
-// 	} else {
-// 		log.Printf("> message sent to partition %d at offset %d\n", partition, offset)
-// 		return nil
-// 	}
-// }

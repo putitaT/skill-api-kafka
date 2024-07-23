@@ -5,26 +5,12 @@ import (
 	"fmt"
 	"net/http"
 
-	// "strings"
-
 	"github.com/gin-gonic/gin"
 	"github.com/putitaT/skill-api-kafka/api/database"
 	"github.com/putitaT/skill-api-kafka/api/util"
 )
 
 var db = database.ConnectDB()
-
-func SkillApi(r *gin.Engine) {
-	r.GET("/api/v1/skills/:key", getSkillByKey)
-	r.GET("/api/v1/skills", getAllSkill)
-	r.POST("/api/v1/skills", createSkill)
-	r.PUT("/api/v1/skills/:key", updateSkillById)
-	r.PATCH("/api/v1/skills/:key/actions/name", updateNameById)
-	r.PATCH("/api/v1/skills/:key/actions/description", updateDescriptionById)
-	r.PATCH("/api/v1/skills/:key/actions/logo", updateLogoById)
-	r.PATCH("/api/v1/skills/:key/actions/tags", updateTagById)
-	r.DELETE("/api/v1/skills/:key", deleteSkillById)
-}
 
 func getSkillByKey(ctx *gin.Context) {
 	key := ctx.Param("key")
@@ -55,8 +41,9 @@ func getAllSkill(ctx *gin.Context) {
 	if err != nil {
 		res = map[string]any{
 			"status":  "error",
-			"message": "Can't get all skill",
+			"message": err,
 		}
+		fmt.Printf("Error: %v\n", err)
 		ctx.JSON(http.StatusNotFound, res)
 	} else {
 		skills := []util.SkillData{}
