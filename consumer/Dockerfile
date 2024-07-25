@@ -3,7 +3,7 @@ WORKDIR /go/src
 COPY . .
 RUN go build -o consumer main.go
 
-FROM alpine
+FROM scratch
 COPY --from=builder /go/src/consumer .
 
 ENTRYPOINT [ "./consumer" ]
